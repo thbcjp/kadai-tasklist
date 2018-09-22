@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Tasklist;
+use App\Task;
 
-class TasklistsController extends Controller
+class TasksController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,9 +15,9 @@ class TasklistsController extends Controller
     public function index()
     {
         //
-        $tasklists = Tasklist::all();
+        $tasks = Task::all();
         
-        return view('tasklists.index', compact('tasklists'));
+        return view('tasklists.index', compact('tasks'));
     }
 
     /**
@@ -28,9 +28,9 @@ class TasklistsController extends Controller
     public function create()
     {
         //
-        $tasklist = new Tasklist;
+        $task = new Task;
         
-        return view('tasklists.create', compact('tasklist'));
+        return view('tasklists.create', compact('task'));
     }
 
     /**
@@ -41,10 +41,14 @@ class TasklistsController extends Controller
      */
     public function store(Request $request)
     {
-        //
-        $tasklist = new Tasklist;
-        $tasklist->content = $request->content;
-        $tasklist->save();
+        // バリデーション
+        $this->validate($request, [
+                'content' => 'required|max:191',
+        ]);
+        
+        $task = new Task;
+        $task->content = $request->content;
+        $task->save();
         
         return redirect()->route('tasklists.index')->with('success', '新規タスクの登録が完了しました');
     }
@@ -58,9 +62,9 @@ class TasklistsController extends Controller
     public function show($id)
     {
         //
-        $tasklist = Tasklist::find($id);
+        $task = Task::find($id);
         
-        return view('tasklists.show', compact('tasklist'));
+        return view('tasklists.show', compact('task'));
     }
 
     /**
@@ -71,10 +75,10 @@ class TasklistsController extends Controller
      */
     public function edit($id)
     {
-        //
-        $tasklist = Tasklist::find($id);
+
+        $task = Task::find($id);
         
-        return view('tasklists.edit', compact('tasklist'));
+        return view('tasklists.edit', compact('task'));
     }
 
     /**
@@ -86,10 +90,14 @@ class TasklistsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-        $tasklist = Tasklist::find($id);
-        $tasklist->content = $request->content;
-        $tasklist->save();
+        // バリデーション
+        $this->validate($request, [
+                'content' => 'required|max:191',
+        ]);
+
+        $task = Task::find($id);
+        $task->content = $request->content;
+        $task->save();
         
         return redirect()->route('tasklists.index')->with('success', 'タスクの更新が完了しました');
     }
@@ -103,8 +111,8 @@ class TasklistsController extends Controller
     public function destroy($id)
     {
         //
-        $tasklist = Tasklist::find($id);
-        $tasklist->delete();
+        $task = Task::find($id);
+        $task->delete();
         
         return redirect()->route('tasklists.index')->with('success', 'タスクの削除が完了しました');
     }

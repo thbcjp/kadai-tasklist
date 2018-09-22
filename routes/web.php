@@ -27,6 +27,6 @@ Route::put('tasklists/{id}', 'TasklistsController@update')->name('tasklists.upda
 Route::delete('tasklists/{id}', 'TasklistsController@destroy')->name('tasklists.destroy');
 */
 
-Route::get('/', 'TasklistsController@index');
-Route::resource('tasklists', 'TasklistsController');
+Route::get('/', 'TasksController@index');
+Route::resource('tasklists', 'TasksController');
 

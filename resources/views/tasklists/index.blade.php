@@ -4,10 +4,10 @@
 
     <h1>タスク一覧</h1>
     
-    @if (count($tasklists) > 0)
+    @if (count($tasks) > 0)
         <ul>
-            @foreach($tasklists as $tasklist)
-            <li>{!! link_to_route('tasklists.show', $tasklist->id, ['id' => $tasklist->id]) !!} : {{ $tasklist->content }}</li>
+            @foreach($tasks as $task)
+            <li>{!! link_to_route('tasklists.show', $task->id, ['id' => $task->id]) !!} : {{ $task->content }}</li>
             @endforeach
         </ul>
     @endif
