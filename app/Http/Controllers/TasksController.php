@@ -44,10 +44,12 @@ class TasksController extends Controller
         // バリデーション
         $this->validate($request, [
                 'content' => 'required|max:191',
+                'status' => 'required|max:10',
         ]);
         
         $task = new Task;
         $task->content = $request->content;
+        $task->status = $request->status;
         $task->save();
         
         return redirect()->route('tasklists.index')->with('success', '新規タスクの登録が完了しました');
@@ -93,10 +95,12 @@ class TasksController extends Controller
         // バリデーション
         $this->validate($request, [
                 'content' => 'required|max:191',
+                'status' => 'required|max:10',
         ]);
 
         $task = Task::find($id);
         $task->content = $request->content;
+        $task->status = $request->status;
         $task->save();
         
         return redirect()->route('tasklists.index')->with('success', 'タスクの更新が完了しました');
