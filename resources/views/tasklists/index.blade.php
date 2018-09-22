@@ -7,7 +7,7 @@
     @if (count($tasks) > 0)
         <ul>
             @foreach($tasks as $task)
-            <li>{!! link_to_route('tasklists.show', $task->id, ['id' => $task->id]) !!} : {{ $task->content }}</li>
+            <li>{!! link_to_route('tasklists.show', $task->id, ['id' => $task->id]) !!} : {{ $task->content }} ステータス : {{ $task->status }}</li>
             @endforeach
         </ul>
     @endif
