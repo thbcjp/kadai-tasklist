@@ -27,10 +27,12 @@ Route::put('tasklists/{id}', 'TasklistsController@update')->name('tasklists.upda
 Route::delete('tasklists/{id}', 'TasklistsController@destroy')->name('tasklists.destroy');
 */
 
+
+Route::get('/', 'TasksController@index');
+
 // 必ずログイン認証を確認するような措置
 Route::group(['middleware' => ['auth']], function () {
     Route::resource('users', 'UsersController', ['only' => ['index', 'show']]);
-    Route::get('/', 'TasksController@index');
     Route::resource('tasklists', 'TasksController');
 });
 
