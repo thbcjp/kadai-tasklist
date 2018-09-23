@@ -15,9 +15,14 @@ class TasksController extends Controller
     public function index()
     {
         //
-        $tasks = Task::all();
-        
-        return view('tasklists.index', compact('tasks'));
+        if(\Auth::check()){
+            $tasks = Task::all();
+            return view('tasklists.index', compact('tasks'));
+            
+        } else {
+            return view('/');
+        }
+
     }
 
     /**
@@ -28,9 +33,13 @@ class TasksController extends Controller
     public function create()
     {
         //
-        $task = new Task;
-        
-        return view('tasklists.create', compact('task'));
+        if(\Auth::check()){
+            $task = new Task;
+            return view('tasklists.create', compact('task'));
+        } else {
+            return view('/');
+        }
+
     }
 
     /**
@@ -41,18 +50,26 @@ class TasksController extends Controller
      */
     public function store(Request $request)
     {
-        // バリデーション
-        $this->validate($request, [
-                'content' => 'required|max:191',
-                'status' => 'required|max:10',
-        ]);
         
-        $task = new Task;
-        $task->content = $request->content;
-        $task->status = $request->status;
-        $task->save();
-        
-        return redirect()->route('tasklists.index')->with('success', '新規タスクの登録が完了しました');
+        if(\Auth::check()){
+            
+            // バリデーション
+            $this->validate($request, [
+                    'content' => 'required|max:191',
+                    'status' => 'required|max:10',
+            ]);
+            
+            $task = new Task;
+            $task->content = $request->content;
+            $task->status = $request->status;
+            $task->save();
+            
+            return redirect()->route('tasklists.index')->with('success', '新規タスクの登録が完了しました');
+
+        } else {
+            return view('/');
+        }
+
     }
 
     /**
@@ -64,9 +81,16 @@ class TasksController extends Controller
     public function show($id)
     {
         //
-        $task = Task::find($id);
+        if(\Auth::check()){
+
+            $task = Task::find($id);
+            
+            return view('tasklists.show', compact('task'));
         
-        return view('tasklists.show', compact('task'));
+        } else {
+            return view('/');
+        }
+
     }
 
     /**
@@ -77,10 +101,17 @@ class TasksController extends Controller
      */
     public function edit($id)
     {
-
-        $task = Task::find($id);
         
-        return view('tasklists.edit', compact('task'));
+        if(\Auth::check()){
+
+            $task = Task::find($id);
+            
+            return view('tasklists.edit', compact('task'));
+
+        } else {
+                return view('/');
+            }
+
     }
 
     /**
@@ -92,18 +123,23 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // バリデーション
-        $this->validate($request, [
-                'content' => 'required|max:191',
-                'status' => 'required|max:10',
-        ]);
+        if(\Auth::check()){
+            // バリデーション
+            $this->validate($request, [
+                    'content' => 'required|max:191',
+                    'status' => 'required|max:10',
+            ]);
+    
+            $task = Task::find($id);
+            $task->content = $request->content;
+            $task->status = $request->status;
+            $task->save();
+            
+            return redirect()->route('tasklists.index')->with('success', 'タスクの更新が完了しました');
+        } else {
+                return view('/');
+            }
 
-        $task = Task::find($id);
-        $task->content = $request->content;
-        $task->status = $request->status;
-        $task->save();
-        
-        return redirect()->route('tasklists.index')->with('success', 'タスクの更新が完了しました');
     }
 
     /**
@@ -115,9 +151,14 @@ class TasksController extends Controller
     public function destroy($id)
     {
         //
-        $task = Task::find($id);
-        $task->delete();
-        
-        return redirect()->route('tasklists.index')->with('success', 'タスクの削除が完了しました');
+        if(\Auth::check()){
+            $task = Task::find($id);
+            $task->delete();
+            
+            return redirect()->route('tasklists.index')->with('success', 'タスクの削除が完了しました');
+        } else {
+                return view('/');
+            }
+
     }
 }
