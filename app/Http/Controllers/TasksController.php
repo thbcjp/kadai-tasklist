@@ -15,14 +15,8 @@ class TasksController extends Controller
     public function index()
     {
         //
-        if(\Auth::check()){
             $tasks = Task::all();
             return view('tasklists.index', compact('tasks'));
-            
-        } else {
-            return view('/');
-        }
-
     }
 
     /**
@@ -87,9 +81,7 @@ class TasksController extends Controller
             
             return view('tasklists.show', compact('task'));
         
-        } else {
-            return view('/');
-        }
+        } 
 
     }
 
