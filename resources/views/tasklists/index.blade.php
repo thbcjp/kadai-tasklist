@@ -21,7 +21,6 @@
             </div>
         </div>
     </li>
-    @endforeach
 
     <h1>タスク一覧</h1>
     
