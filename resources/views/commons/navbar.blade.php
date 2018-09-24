@@ -15,14 +15,14 @@
                     @if (Auth::check())
                     <li><a href="#">Users</a></li>
                     <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
-                            <ul class="dropdown-menu caret">
-                                <li>{!! link_to_route('tasklists.create', '新規タスクの投稿') !!}</li>
-                                <li>{!! link_to_route('tasklists.index', 'マイタスク一覧') !!}</li>
-                                <li role="separator" class="divider"></li>
-                                <li>{!! link_to_route('logout.get', 'Logout') !!}</li>
-                            </ul>
-                        </li>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li>{!! link_to_route('tasklists.create', '新規タスクの投稿') !!}</li>
+                            <li>{!! link_to_route('tasklists.index', 'マイタスク一覧') !!}</li>
+                            <li role="separator" class="divider"></li>
+                            <li>{!! link_to_route('logout.get', 'Logout') !!}</li>
+                        </ul>
+                    </li>
                     @else
                         <li>{!! link_to_route('signup.get', 'Signup') !!}</li>
                         <li>{!! link_to_route('login', 'Login') !!}</li>
