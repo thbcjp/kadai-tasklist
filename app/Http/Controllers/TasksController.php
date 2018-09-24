@@ -15,8 +15,17 @@ class TasksController extends Controller
     public function index()
     {
         //
-            $tasks = Task::all();
-            return view('tasklists.index', compact('tasks'));
+        $data = [];
+        if (Auth::check()){
+            $user = Auth::user();
+            $tasks = $user->tasks()->latest()->paginate(10);
+            
+            $data = [
+                'user' => $users,
+                'tasks' => $tasks,
+            ];
+        }
+        return view('tasklists.index', compact('tasks', 'data'));
     }
 
     /**
