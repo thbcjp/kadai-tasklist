@@ -30,9 +30,9 @@ class TasksController extends Controller
                 
                 return view('tasklists.index', $data);
                 
-           // } else {
+            } else {
                 
-            //} return redirect('/');
+            } return redirect('/');
             
         } 
 
