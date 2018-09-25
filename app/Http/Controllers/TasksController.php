@@ -151,7 +151,7 @@ $user = Auth::user();
                return view('tasklists.edit', $data);
                
            } else {
-               return view('/');
+               return redirect('/');
            }
            
        } else {
