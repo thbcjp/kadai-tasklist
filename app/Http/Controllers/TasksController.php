@@ -32,7 +32,7 @@ class TasksController extends Controller
                 
             } else {
                 
-            } return redirect('/');
+            } return view('/');
 
     }
 
@@ -79,7 +79,7 @@ class TasksController extends Controller
             return redirect()->route('tasklists.index')->with('success', '新規タスクの登録が完了しました');
 
         } else {
-            return view('/');
+            return redirect('/');
         }
 
     }
@@ -108,7 +108,7 @@ class TasksController extends Controller
                 return view('tasklists.show', $data); //$dataは配列の形にしてデータを格納させる
                 
             } else {
-                return redirect('/'); // falseだったらリダイレクトさせて見れないようにする
+                return view('/'); // falseだったらリダイレクトさせて見れないようにする
             }
             
             /*$user = Auth::user();
@@ -121,7 +121,7 @@ class TasksController extends Controller
     
         } else {
 
-        return redirect('/');
+        return view('/');
         //return view('tasklists.show', compact('user', 'task'));
         
         }
@@ -160,11 +160,11 @@ class TasksController extends Controller
                 return view('tasklists.edit', $data);
                 
             } else {
-                return redirect('/');
+                return view('/');
             } 
             
         } else {
-                return redirect('/');
+                return view('/');
         }
 
     }
@@ -192,7 +192,7 @@ class TasksController extends Controller
             
             return redirect()->route('tasklists.index')->with('success', 'タスクの更新が完了しました');
         } else {
-                return view('/');
+                return redirect('/');
             }
 
     }
