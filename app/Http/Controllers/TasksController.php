@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Task;
-
+use Illuminate\Support\Facades\Auth;
 class TasksController extends Controller
 {
     /**
@@ -15,17 +15,27 @@ class TasksController extends Controller
     public function index()
     {
         //
-        $data = [];
         if (Auth::check()){
-            $user = Auth::user();
-            $tasks = $user->tasks()->latest()->paginate(10);
             
-            $data = [
-                'user' => $users,
-                'tasks' => $tasks,
-            ];
-        }
-        return view('tasklists.index', compact('tasks', 'user', 'tasks'));
+            $user = Auth::user();
+            // $tasks = Task::latest()->paginate(10); これだとTaskの中身が全部取れてしまう。
+            $tasks = $user->tasks()->latest()->paginate(5); // これならユーザーごとに紐づけられたタスクのみ取れる
+            
+            //if (Auth::user()->id === $tasks->user()->id){ なぜこれがダメなのか？
+                
+                $data = [
+                    'user' => $user,
+                    'tasks' => $tasks,
+                ];
+                
+                return view('tasklists.index', $data);
+                
+           // } else {
+                
+            //} return redirect('/');
+            
+        } 
+
     }
 
     /**
@@ -36,7 +46,7 @@ class TasksController extends Controller
     public function create()
     {
         //
-        if(\Auth::check()){
+        if(Auth::check()){
             $task = new Task;
             return view('tasklists.create', compact('task'));
         } else {
@@ -54,7 +64,7 @@ class TasksController extends Controller
     public function store(Request $request)
     {
         
-        if(\Auth::check()){
+        if(Auth::check()){
             
             // バリデーション
             $this->validate($request, [
@@ -63,6 +73,7 @@ class TasksController extends Controller
             ]);
             
             $task = new Task;
+            $task->user_id = $request->user()->id;
             $task->content = $request->content;
             $task->status = $request->status;
             $task->save();
@@ -84,13 +95,38 @@ class TasksController extends Controller
     public function show($id)
     {
         //
-        if(\Auth::check()){
-
-            $task = Task::find($id);
-            
-            return view('tasklists.show', compact('task'));
+        if (Auth::check()){ // ログインチェック
         
-        } 
+            $user = Auth::user(); // $userにユーザー情報を入れる
+            $task = Task::find($id); // $taskに$id情報を入れる
+            
+            if ( Auth::user()->id === $task->user_id ){ // ユーザーIDとタスクから紐づけられたユーザーIDが同一かチェック
+                
+                $data = [
+                    'user' => $user,
+                    'task' => $task,
+                ];
+                
+                return view('tasklists.show', $data); //$dataは配列の形にしてデータを格納させる
+                
+            } else {
+                return redirect('/'); // falseだったらリダイレクトさせて見れないようにする
+            }
+            
+            /*$user = Auth::user();
+            $task = $user->tasks()->find($id);
+            
+            $data = [
+                'user' => $user,
+                'task' => $task,
+            ];*/
+    
+        } else {
+
+        return redirect('/');
+        //return view('tasklists.show', compact('user', 'task'));
+        
+        }
 
     }
 
@@ -102,16 +138,36 @@ class TasksController extends Controller
      */
     public function edit($id)
     {
-        
-        if(\Auth::check()){
-
-            $task = Task::find($id);
+        //
+        if(Auth::check()){
             
-            return view('tasklists.edit', compact('task'));
+           
+            
+            $task = Task::find($id);
+            //Auth::user()->id === $task->user_id;
+            
+            $user = Auth::user();
+            //$task = $user->tasks()->find($id);
+            
+            if ( Auth::user()->id === $task->user_id ){
+                
+                //$user = Auth::user();
+                //dd($task = $user->tasks()->find($id));
 
+                $data = [
+                    'user' => $user,
+                    'task' => $task,
+                ];
+                
+                return view('tasklists.edit', $data);
+                
+            } else {
+                return redirect('/');
+            } 
+            
         } else {
-                return view('/');
-            }
+                return redirect('/');
+        }
 
     }
 
@@ -124,7 +180,7 @@ class TasksController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if(\Auth::check()){
+        if(Auth::check()){
             // バリデーション
             $this->validate($request, [
                     'content' => 'required|max:191',
@@ -152,7 +208,7 @@ class TasksController extends Controller
     public function destroy($id)
     {
         //
-        if(\Auth::check()){
+        if(Auth::check()){
             $task = Task::find($id);
             $task->delete();
             
