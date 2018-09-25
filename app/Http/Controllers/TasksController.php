@@ -16,24 +16,16 @@ class TasksController extends Controller
     {
         //
         if (Auth::check()){
-            
             $user = Auth::user();
-            // $tasks = Task::latest()->paginate(10); これだとTaskの中身が全部取れてしまう。
-            $tasks = $user->tasks()->latest()->paginate(5); // これならユーザーごとに紐づけられたタスクのみ取れる
+            //$tasks = Task::latest()->paginate(10);
+            $tasks = $user->tasks()->latest()->paginate(10); 
             
-            //if (Auth::user()->id === $tasks->user()->id){ なぜこれがダメなのか？
-                
-                $data = [
-                    'user' => $user,
-                    'tasks' => $tasks,
-                ];
-                
-                return view('tasklists.index', $data);
-                
-            } else {
-                
-            } return view('/');
-
+            $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+        }
+        return view('tasklists.index', compact('user', 'tasks'));
     }
 
     /**
@@ -79,7 +71,7 @@ class TasksController extends Controller
             return redirect()->route('tasklists.index')->with('success', '新規タスクの登録が完了しました');
 
         } else {
-            return redirect('/');
+            return view('/');
         }
 
     }
@@ -105,10 +97,10 @@ class TasksController extends Controller
                     'task' => $task,
                 ];
                 
-                return view('tasklists.show', $data); //$dataは配列の形にしてデータを格納させる
+                return view('tasklists.show', $data); //$dataは配列の形うbにしてデータを格納させる
                 
             } else {
-                return view('/'); // falseだったらリダイレクトさせて見れないようにする
+                return redirect('/'); // falseだったらリダイレクトさせて見れないようにする
             }
             
             /*$user = Auth::user();
@@ -121,7 +113,7 @@ class TasksController extends Controller
     
         } else {
 
-        return view('/');
+        return redirect('/');
         //return view('tasklists.show', compact('user', 'task'));
         
         }
@@ -138,34 +130,37 @@ class TasksController extends Controller
     {
         //
         if(Auth::check()){
+           
+         
+           
+           $task = Task::find($id);
+           //Auth::user()->id === $task->user_id;
+$user = Auth::user();
+           //$task = $user->tasks()->find($id);
+           
+           if ( Auth::user()->id === $task->user_id ){
+               
+               //$user = Auth::user();
+               //dd($task = $user->tasks()->find($id));
+
+               $data = [
+                   'user' => $user,
+                   'task' => $task,
+               ];
+               
+               return view('tasklists.edit', $data);
+               
+           } else {
+               return view('/');
+           }
+           
+       } else {
+               return redirect('/');
+       }
             
            
             
-            $task = Task::find($id);
-            //Auth::user()->id === $task->user_id;
             
-            $user = Auth::user();
-            //$task = $user->tasks()->find($id);
-            
-            if ( Auth::user()->id === $task->user_id ){
-                
-                //$user = Auth::user();
-                //dd($task = $user->tasks()->find($id));
-
-                $data = [
-                    'user' => $user,
-                    'task' => $task,
-                ];
-                
-                return view('tasklists.edit', $data);
-                
-            } else {
-                return view('/');
-            } 
-            
-        } else {
-                return view('/');
-        }
 
     }
 
@@ -192,7 +187,7 @@ class TasksController extends Controller
             
             return redirect()->route('tasklists.index')->with('success', 'タスクの更新が完了しました');
         } else {
-                return redirect('/');
+                return view('/');
             }
 
     }
