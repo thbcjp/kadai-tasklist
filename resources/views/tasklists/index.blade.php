@@ -4,22 +4,7 @@
 
     @if (Auth::check())
     
-    @foreach ($tasks as $task)
-        
-    <li class="media">
-        <div class="media-left">
-            <img class="media-object img-rounded" src="{{ Gravatar::src($user->email, 50) }}" alt="">
-        </div>
-        <div class="media-body">
-            <div>
-                {{ $task->user->name }} <span class="text-muted">posted at {{ $task->created_at }}</span>
-            </div>
-            <div>
-                <p>{!! nl2br(e($task->content)) !!}</p>
-            </div>
-        </div>
-    </li>
-    @endforeach
+    
 
     <h1>タスク一覧</h1>
     
